@@ -8,45 +8,6 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="tne-QT-ifu">
-            <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="VirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="top" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" contentHorizontalAlignment="center" contentVerticalAlignment="top" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dLO-XY-OZd">
-                                <rect key="frame" x="173.5" y="44" width="67" height="31"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
-                                <connections>
-                                    <action selector="buttonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="jnX-fR-K6A"/>
-                                </connections>
-                            </button>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="square.and.arrow.up.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="1Ze-Cm-atI">
-                                <rect key="frame" x="0.0" y="83.5" width="414" height="778"/>
-                            </imageView>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="1Ze-Cm-atI" firstAttribute="top" secondItem="dLO-XY-OZd" secondAttribute="bottom" constant="8" symbolic="YES" id="6pi-GJ-72z"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="1Ze-Cm-atI" secondAttribute="bottom" id="8ON-AV-44z"/>
-                            <constraint firstItem="dLO-XY-OZd" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="BTo-is-XUO"/>
-                            <constraint firstItem="1Ze-Cm-atI" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="HDU-Gc-GLT"/>
-                            <constraint firstItem="dLO-XY-OZd" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="LTs-5L-Vv2"/>
-                            <constraint firstItem="1Ze-Cm-atI" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="MF1-Be-sYU"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="imageView" destination="1Ze-Cm-atI" id="6o4-KX-ZPO"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-143" y="110"/>
-        </scene>
         <!--Travel Locations Map View Controller-->
         <scene sceneID="msb-QN-L6N">
             <objects>
@@ -81,7 +42,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="square.and.arrow.up.circle.fill" catalog="system" width="128" height="121"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

@@ -9,7 +9,7 @@ import Foundation
 import MapKit
 
 class FlickrClient {
-    static let apiKey = "2392b66c17d15a4d5d569fcfb52ad025"
+    static let apiKey = "2392b66c17d15a4d5d569fcfb52ad025x"
     static let apiSecret = "2502f37b9fd41f20"
     static let perPage = 10
     static let sizeSuffix = "w"
@@ -51,7 +51,7 @@ class FlickrClient {
                     }
                 } catch {
                     do{
-                        let errorResponse =  try decoder.decode(ErrorResponse.self, from: data) as Error
+                        let errorResponse = try decoder.decode(ErrorResponse.self, from: data) as Error
                         DispatchQueue.main.async {
                             completion(nil, errorResponse)
                         }

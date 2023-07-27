@@ -19,27 +19,29 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate {
     
     var fetchedResultsController: NSFetchedResultsController<Pin>!
     
- 
-    
     override func viewDidLoad() {
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleMapLongPress(_:)))
-        
         mapView.addGestureRecognizer(longPressGesture)
         reloadMap()
+        addSaveNotificationObserver()
+    }
+    
+    deinit {
+        removeSaveNotificationObserver()
     }
     
     @objc func handleMapLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
         if gestureRecognizer.state == .began {
             let touchPoint = gestureRecognizer.location(in: mapView)
             let coordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
-            addPinToMap(coordinate: coordinate)
+            let backgroundContext: NSManagedObjectContext! = dataController.backgroundContext
+            backgroundContext.perform {
+                let pin = Pin(context: backgroundContext)
+                pin.latitude = coordinate.latitude
+                pin.longitude = coordinate.longitude
+                try? backgroundContext.save()
+            }
         }
-    }
-    
-    func addPinToMap(coordinate: CLLocationCoordinate2D) {
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = coordinate
-        mapView.addAnnotation(annotation)
     }
     
     // MARK: - MKMapViewDelegate
@@ -62,12 +64,10 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate {
         if let annotation = view.annotation{
             let coordinate = annotation.coordinate
             print(coordinate)
+            
         }
     }
 }
-
-
-
 
 extension TravelLocationsMapViewController {
     
@@ -90,7 +90,9 @@ extension TravelLocationsMapViewController {
             let results = try dataController.viewContext.fetch(fetchRequest)
             mapView.removeAnnotations(mapView.annotations)
             for result in results {
-                
+                let annotation = MKPointAnnotation()
+                annotation.coordinate = CLLocationCoordinate2DMake(result.latitude, result.longitude)
+                self.mapView.addAnnotation(annotation)
             }
         } catch {
             fatalError("The fetch could not be performed: \(error.localizedDescription)")
@@ -102,6 +104,31 @@ extension TravelLocationsMapViewController {
             self.reloadMap()
         }
     }
+    
+    
+    func getPhotosInfoByloctaionCompleteHandler(response: SearchPhotosResponse?, error: Error?) {
+        if let response = response {
+            if let photo = response.photos.photo?.first {
+                FlickrClient().getJpgPhoto(photo) { data, error in
+                    guard let data = data else {
+                        return
+                    }
+                    let image = UIImage(data: data)
+                }
+            }
+        } else {
+            if let error = error {
+                showFailure(message: error.localizedDescription)
+            }
+        }
+    }
+
+    func showFailure(message: String, title: String = "Failed") {
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        show(alertVC, sender: nil)
+    }
+
 }
 
 

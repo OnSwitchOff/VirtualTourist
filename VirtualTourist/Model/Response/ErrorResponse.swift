@@ -6,3 +6,15 @@
 //
 
 import Foundation
+
+struct ErrorResponse: Codable {
+    let stat: String
+    let message: String
+    let code: Int
+}
+
+extension ErrorResponse: LocalizedError {
+    var errorDescription: String? {
+        return message
+    }
+}
