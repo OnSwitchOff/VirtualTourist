@@ -80,12 +80,14 @@ class PhotoAlbumViewController: UICollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
-        
-        //let Photo =
+        let photoToDelete = fetchedResultsController.object(at: indexPath)
+        let photoID = photoToDelete.objectID
+        let backgroundContext: NSManagedObjectContext! = self.dataController.backgroundContext
+        backgroundContext.perform {
+            backgroundContext.delete(backgroundContext.object(with: photoID))
+            try? backgroundContext.save()
+        }
     }
-    
-    
 }
 
 class PhotoAlbumCollectionViewCell: UICollectionViewCell {
