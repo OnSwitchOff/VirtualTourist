@@ -60,11 +60,49 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate {
         return annotationView
     }
     
+    var selectedPin: Pin?
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         if let annotation = view.annotation{
             let coordinate = annotation.coordinate
-            print(coordinate)
+            print(coordinate.latitude)
+            print(coordinate.longitude)
             
+            
+            let lon: Double = coordinate.longitude
+            let lat: Double = coordinate.latitude
+            
+            let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
+            let predicate = NSPredicate(format: "longitude = %f AND latitude = %f", lon, lat)
+            //fetchRequest.predicate = predicate
+            let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: false)
+            fetchRequest.sortDescriptors = [sortDescriptor]
+            do {
+                let results = try dataController.viewContext.fetch(fetchRequest)
+                let filt = (results as NSArray).filtered(using: predicate)//doesnt work(
+                for result in results {
+                    if result.longitude == lon, result.latitude == lat {
+                        selectedPin = result
+                        performSegue(withIdentifier: "showPhotoAlbum", sender: nil)
+                        break;
+                    }
+                }
+
+            } catch {
+                fatalError("The fetch could not be performed: \(error.localizedDescription)")
+            }
+            
+        }
+    }
+    
+    // -------------------------------------------------------------------------
+    // MARK: - Navigation
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let vc = segue.destination as? PhotoAlbumViewController {
+            if let selectedPin = selectedPin {
+                vc.pin = selectedPin
+                vc.dataController = self.dataController
+            }
         }
     }
 }
@@ -90,6 +128,7 @@ extension TravelLocationsMapViewController {
             let results = try dataController.viewContext.fetch(fetchRequest)
             mapView.removeAnnotations(mapView.annotations)
             for result in results {
+                print("\(result.longitude)-\(result.latitude)")
                 let annotation = MKPointAnnotation()
                 annotation.coordinate = CLLocationCoordinate2DMake(result.latitude, result.longitude)
                 self.mapView.addAnnotation(annotation)
@@ -104,31 +143,6 @@ extension TravelLocationsMapViewController {
             self.reloadMap()
         }
     }
-    
-    
-    func getPhotosInfoByloctaionCompleteHandler(response: SearchPhotosResponse?, error: Error?) {
-        if let response = response {
-            if let photo = response.photos.photo?.first {
-                FlickrClient().getJpgPhoto(photo) { data, error in
-                    guard let data = data else {
-                        return
-                    }
-                    let image = UIImage(data: data)
-                }
-            }
-        } else {
-            if let error = error {
-                showFailure(message: error.localizedDescription)
-            }
-        }
-    }
-
-    func showFailure(message: String, title: String = "Failed") {
-        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        show(alertVC, sender: nil)
-    }
-
 }
 
 

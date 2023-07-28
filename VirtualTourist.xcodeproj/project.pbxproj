@@ -19,6 +19,7 @@
 		520B3CB72A7282D400311326 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520B3CB62A7282D400311326 /* DataController.swift */; };
 		520B3CBA2A728A4500311326 /* Pin+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520B3CB92A728A4500311326 /* Pin+Extension.swift */; };
 		520B3CBC2A72AAE500311326 /* ErrorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520B3CBB2A72AAE500311326 /* ErrorResponse.swift */; };
+		520B3CBE2A72AED300311326 /* PhotoAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520B3CBD2A72AED300311326 /* PhotoAlbumViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		520B3CB62A7282D400311326 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		520B3CB92A728A4500311326 /* Pin+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Pin+Extension.swift"; sourceTree = "<group>"; };
 		520B3CBB2A72AAE500311326 /* ErrorResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorResponse.swift; sourceTree = "<group>"; };
+		520B3CBD2A72AED300311326 /* PhotoAlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 			isa = PBXGroup;
 			children = (
 				520B3CB42A727A7C00311326 /* TravelLocationsMapViewController.swift */,
+				520B3CBD2A72AED300311326 /* PhotoAlbumViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -207,6 +210,7 @@
 				520B3CB32A7278ED00311326 /* VirtualTourist.xcdatamodeld in Sources */,
 				520B3CAE2A72625800311326 /* SearchPhotosResponse.swift in Sources */,
 				520B3CB52A727A7C00311326 /* TravelLocationsMapViewController.swift in Sources */,
+				520B3CBE2A72AED300311326 /* PhotoAlbumViewController.swift in Sources */,
 				520B3CB72A7282D400311326 /* DataController.swift in Sources */,
 				520B3C922A71318900311326 /* AppDelegate.swift in Sources */,
 				520B3C942A71318900311326 /* SceneDelegate.swift in Sources */,
