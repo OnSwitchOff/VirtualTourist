@@ -122,8 +122,12 @@ class PhotoAlbumViewController: UICollectionViewController, UICollectionViewDele
         if  let imageData = data.image {
             cell.PhotoImageView.image = UIImage(data: imageData)
         } else {
-            let placeholder: UIImage? = UIImage(named: "PosterPlaceholder")
-            cell.PhotoImageView.image = placeholder
+            //let placeholder: UIImage? = UIImage(named: "PosterPlaceholder")
+            //cell.PhotoImageView.image = placeholder
+            
+            cell.PhotoImageView.isHidden = true
+            cell.activityIndicator.startAnimating()
+            
             if let id = data.id, let secret = data.secret, let server = data.server {
                 let photoInfo = PhotoInfoDTO(id: id, secret: secret, server: server)
                 FlickrClient().getJpgPhoto(photoInfo){ imagedata, error in
@@ -134,6 +138,8 @@ class PhotoAlbumViewController: UICollectionViewController, UICollectionViewDele
                     cell.PhotoImageView.image = image
                     data.image = imagedata
                     try? self.dataController.viewContext.save()
+                    cell.activityIndicator.stopAnimating()
+                    cell.PhotoImageView.isHidden = false
                     cell.setNeedsLayout()
                 }
             }
@@ -158,6 +164,7 @@ class PhotoAlbumViewController: UICollectionViewController, UICollectionViewDele
 
 class PhotoAlbumCollectionViewCell: UICollectionViewCell {
     @IBOutlet var PhotoImageView: UIImageView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 }
 
 extension PhotoAlbumViewController {
