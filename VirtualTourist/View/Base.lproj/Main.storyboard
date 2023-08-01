@@ -102,7 +102,13 @@
                             <outlet property="delegate" destination="lGy-FO-3aw" id="ATI-vP-tlS"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" id="gDP-h9-b0c"/>
+                    <navigationItem key="navigationItem" id="gDP-h9-b0c">
+                        <barButtonItem key="rightBarButtonItem" image="arrow.clockwise" catalog="system" id="M1X-4v-A6t">
+                            <connections>
+                                <action selector="refreshButtonTapped:" destination="lGy-FO-3aw" id="HH1-g5-c0A"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="collectionView" destination="952-xf-D0Z" id="6VJ-D4-AqN"/>
                         <outlet property="flowLayout" destination="lCD-zd-MYc" id="e9a-lT-VSw"/>
@@ -115,6 +121,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="arrow.clockwise" catalog="system" width="115" height="128"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

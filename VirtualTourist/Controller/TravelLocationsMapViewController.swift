@@ -30,19 +30,62 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate {
         removeSaveNotificationObserver()
     }
     
+    
+    var coordinate: CLLocationCoordinate2D?
     @objc func handleMapLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
         if gestureRecognizer.state == .began {
             let touchPoint = gestureRecognizer.location(in: mapView)
-            let coordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
-            let backgroundContext: NSManagedObjectContext! = dataController.backgroundContext
-            backgroundContext.perform {
-                let pin = Pin(context: backgroundContext)
-                pin.latitude = coordinate.latitude
-                pin.longitude = coordinate.longitude
-                try? backgroundContext.save()
+            coordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
+            
+            if let coordinate = coordinate {
+                FlickrClient().getPhotosInfoByLocation(CLLocationCoordinate2DMake(coordinate.latitude, coordinate.longitude), completion: getPhotosInfoByloctaionCompleteHandler(response:error:))
             }
         }
     }
+    
+    func getPhotosInfoByloctaionCompleteHandler(response: SearchPhotosResponse?, error: Error?) {
+        if let response = response, let coordinate = coordinate {
+            let backgroundContext: NSManagedObjectContext! = dataController.backgroundContext
+            backgroundContext.perform {
+                let totalPages = response.photos.pages
+                let pin = Pin(context: backgroundContext)
+                pin.latitude = coordinate.latitude
+                pin.longitude = coordinate.longitude
+                pin.currentPage = 1
+                pin.totalPages = Int32(totalPages)
+                
+                if let photos = response.photos.photo {
+                    for photoInfo in photos {
+                        let photo = Photo(context: backgroundContext)
+                        photo.creationDate = Date()
+                        photo.image = nil
+                        photo.pin = pin
+                        photo.farm = Int32(photoInfo.farm)
+                        photo.id = photoInfo.id
+                        photo.isFamily = photoInfo.isfamily == 1
+                        photo.isFriend = photoInfo.isfriend == 1
+                        photo.isPublic = photoInfo.ispublic == 1
+                        photo.owner = photoInfo.owner
+                        photo.secret = photoInfo.secret
+                        photo.server = photoInfo.server
+                        photo.title = photoInfo.title
+                    }
+                    try? backgroundContext.save()
+                }
+            }
+        } else {
+            if let error = error {
+                showFailure(message: error.localizedDescription)
+            }
+        }
+    }
+    
+    func showFailure(message: String, title: String = "Failed") {
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alertVC, animated: true)
+    }
+
     
     // MARK: - MKMapViewDelegate
 
@@ -64,21 +107,16 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         if let annotation = view.annotation{
             let coordinate = annotation.coordinate
-            print(coordinate.latitude)
-            print(coordinate.longitude)
-            
-            
             let lon: Double = coordinate.longitude
             let lat: Double = coordinate.latitude
             
             let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
-            let predicate = NSPredicate(format: "longitude = %f AND latitude = %f", lon, lat)
+            //let predicate = NSPredicate(format: "longitude = %f AND latitude = %f", lon, lat)
             //fetchRequest.predicate = predicate
             let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: false)
             fetchRequest.sortDescriptors = [sortDescriptor]
             do {
                 let results = try dataController.viewContext.fetch(fetchRequest)
-                let filt = (results as NSArray).filtered(using: predicate)//doesnt work(
                 for result in results {
                     if result.longitude == lon, result.latitude == lat {
                         selectedPin = result
@@ -86,11 +124,9 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate {
                         break;
                     }
                 }
-
             } catch {
                 fatalError("The fetch could not be performed: \(error.localizedDescription)")
             }
-            
         }
     }
     
@@ -128,7 +164,6 @@ extension TravelLocationsMapViewController {
             let results = try dataController.viewContext.fetch(fetchRequest)
             mapView.removeAnnotations(mapView.annotations)
             for result in results {
-                print("\(result.longitude)-\(result.latitude)")
                 let annotation = MKPointAnnotation()
                 annotation.coordinate = CLLocationCoordinate2DMake(result.latitude, result.longitude)
                 self.mapView.addAnnotation(annotation)

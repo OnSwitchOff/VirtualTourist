@@ -2,17 +2,28 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21E258" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Photo" representedClassName="Photo" syncable="YES" codeGenerationType="class">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="farm" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="id" attributeType="String"/>
         <attribute name="image" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <attribute name="isFamily" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isFriend" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isPublic" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="owner" optional="YES" attributeType="String"/>
+        <attribute name="secret" attributeType="String"/>
+        <attribute name="server" attributeType="String"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
         <relationship name="pin" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Pin" inverseName="photos" inverseEntity="Pin"/>
     </entity>
     <entity name="Pin" representedClassName="Pin" syncable="YES" codeGenerationType="class">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="currentPage" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" customClassName="CLLocationCoordinate2D"/>
+        <attribute name="totalPages" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="photos" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Photo" inverseName="pin" inverseEntity="Photo"/>
     </entity>
     <elements>
-        <element name="Photo" positionX="66.1102294921875" positionY="-21.185546875" width="128" height="74"/>
-        <element name="Pin" positionX="-349.201904296875" positionY="-21.01885986328125" width="128" height="88"/>
+        <element name="Photo" positionX="66.1102294921875" positionY="-21.185546875" width="128" height="14"/>
+        <element name="Pin" positionX="-349.201904296875" positionY="-21.01885986328125" width="128" height="119"/>
     </elements>
 </model>
