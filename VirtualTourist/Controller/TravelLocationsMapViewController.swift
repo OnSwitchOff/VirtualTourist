@@ -52,7 +52,7 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate {
                 pin.latitude = coordinate.latitude
                 pin.longitude = coordinate.longitude
                 pin.currentPage = 1
-                pin.totalPages = Int32(totalPages)
+                pin.totalPages = Int32(min(totalPages, 4000/FlickrClient.perPage))
                 
                 if let photos = response.photos.photo {
                     for photoInfo in photos {

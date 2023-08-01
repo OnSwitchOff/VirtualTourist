@@ -11,7 +11,7 @@ import MapKit
 class FlickrClient {
     static let apiKey = "2392b66c17d15a4d5d569fcfb52ad025"
     static let apiSecret = "2502f37b9fd41f20"
-    static let perPage = 4
+    static let perPage = 30
     static let sizeSuffix = "w"
     static var curentPage = 1
     

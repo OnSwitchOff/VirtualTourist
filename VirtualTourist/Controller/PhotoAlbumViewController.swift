@@ -9,13 +9,14 @@ import CoreData
 import UIKit
 import MapKit
 
-class PhotoAlbumViewController: UICollectionViewController {
+class PhotoAlbumViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     var dataController: DataController!
     var saveObserverToken: Any?
     
     @IBOutlet var photoAlbumCollectionView: UICollectionView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     var fetchedResultsController: NSFetchedResultsController<Photo>!
     var pin: Pin!
@@ -34,31 +35,41 @@ class PhotoAlbumViewController: UICollectionViewController {
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext, sectionNameKeyPath: nil, cacheName: nil)
         do {
             try fetchedResultsController.performFetch()
-            print(fetchedResultsController.sections?[0].numberOfObjects ?? 0)
+            debugPrint(fetchedResultsController.sections?[0].numberOfObjects ?? 0)
         } catch {
             fatalError("The fetch could not be performed: \(error.localizedDescription)")
         }
-        
-        let space: CGFloat = 3.0
-        let dimension = (view.frame.size.width - 2 * space) / 3.0
-        
-        flowLayout.minimumLineSpacing = space
-        flowLayout.minimumInteritemSpacing = space
-        flowLayout.itemSize = CGSize(width: dimension, height: dimension)
         
         reloadCollection()
         
         addSaveNotificationObserver()
     }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let space: CGFloat = 3.0
+        let dimension = (view.frame.size.width - 2 * space) / 3.0
+        return CGSize(width: dimension, height: dimension)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 3
+    }
 
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        if collectionView.numberOfItems(inSection: section) == 1 {
+            let flowLayout = collectionViewLayout as! UICollectionViewFlowLayout
+            return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: collectionView.frame.width - flowLayout.itemSize.width)
+        }
+        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         fetchedResultsController = nil
     }
     
-    var refreshInProgress = false
     @IBAction func refreshButtonTapped(_ sender: UIBarButtonItem) {
+        handleActivityAnimation(isActive: true)
         let pinID = pin.objectID
         let backgroundContext: NSManagedObjectContext! = self.dataController.backgroundContext
         backgroundContext.perform {
@@ -79,6 +90,14 @@ class PhotoAlbumViewController: UICollectionViewController {
             } catch {
                 
             }
+        }
+    }
+    
+    func handleActivityAnimation(isActive: Bool) {
+        if isActive {
+            activityIndicator.startAnimating()
+        } else {
+            activityIndicator.stopAnimating()
         }
     }
     
@@ -171,6 +190,7 @@ extension PhotoAlbumViewController {
     }
     
     func getPhotosInfoByloctaionCompleteHandler(response: SearchPhotosResponse?, error: Error?) {
+        handleActivityAnimation(isActive: false)
         if let response = response {
             let pinID = self.pin.objectID
             let backgroundContext: NSManagedObjectContext! = dataController.backgroundContext
